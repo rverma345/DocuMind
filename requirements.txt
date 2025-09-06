@@ -1,0 +1,7 @@
+streamlit
+langchain
+openai
+chromadb
+requests
+pypdf
+python-multipart
