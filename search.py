@@ -67,6 +67,18 @@ def hybrid_search(query, vector_store, top_k=3, num_results=3):
 
     return {"documents": docs, "web": web_items}
 
-# --------------------------
-# 5. Test Locally
 
+def search(query,vector_store,top_k=3,num_results=3):
+
+    results=document_search(query,vector_store),top_k=top_k)
+    if results:  # If we got any doc results
+        best_doc, best_score = results[0]
+    else:
+        # No docs available → force web
+        best_doc, best_score = (None, 0.0)
+
+    #routing
+    mode= query_router(query,best_score)
+
+    if mode=='document_search':
+        document_search
