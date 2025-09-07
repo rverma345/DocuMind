@@ -1,42 +1,58 @@
 from route import query_router
 from langchain_community.vectorstores import Chroma
-import requests
+from langchain_openai import OpenAIEmbeddings
+import requests, os
 from dotenv import load_dotenv
-import requests,os
-
 
 load_dotenv()
 
+# --------------------------
+# 1. Load Chroma Vector Store
+# --------------------------
+def load_vector_store(persist_dir="vector_store"):
+    embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+    vector_store = Chroma(
+        persist_directory=persist_dir,
+        embedding_function=embeddings
+    )
+    return vector_store
 
-def document_search(query,vector_store,top_k=3):
-    results=vector_store.similarity_search_with_score(query,k=top_k)
-    return results
+# --------------------------
+# 2. Document Search
+# --------------------------
+def document_search(query, vector_store, top_k=3):
+    results = vector_store.similarity_search_with_score(query, k=top_k)
+    normalized_results = [(doc, 1 / (1 + score)) for doc, score in results]
+    return normalized_results
 
-
+# --------------------------
+# 3. Web Search
+# --------------------------
 def web_search(query, num_results=3):
     url = "https://google.serper.dev/search"
-
     payload = {"q": query, "num": num_results}
     headers = {
-        "X-API-KEY": os.getenv("SERPER_API_KEY"),  # load from .env
+        "X-API-KEY": os.getenv("SERPER_API_KEY"),
         "Content-Type": "application/json"
     }
 
     response = requests.post(url, headers=headers, json=payload)
     return response.json()
 
+# --------------------------
+# 4. Hybrid Search
+# --------------------------
 def hybrid_search(query, vector_store, top_k=3, num_results=3):
-    """
-    Combines document search + web search
-    """
     doc_results = document_search(query, vector_store, top_k=top_k)
     web_results = web_search(query, num_results=num_results)
 
-    # Extract docs in a clean format
-    docs = [{"source": "document", "content": doc.page_content, "score": score} 
-            for doc, score in doc_results]
+    # Documents
+    docs = [
+        {"source": "document", "content": doc.page_content, "score": score}
+        for doc, score in doc_results
+    ]
 
-    # Extract web search in a clean format
+    # Web results
     web_items = []
     if "organic" in web_results:
         web_items = [
@@ -51,6 +67,6 @@ def hybrid_search(query, vector_store, top_k=3, num_results=3):
 
     return {"documents": docs, "web": web_items}
 
+# --------------------------
+# 5. Test Locally
 
-def searching(query):
-    score

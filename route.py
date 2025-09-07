@@ -9,10 +9,10 @@ def query_router(query: str,doc_score: float):
     query_lower= query.lower()
     if any(keyword in query_lower for keyword in  web_search_keywords):
         return 'web search'
-    if doc_score >= 0.7:
+    if doc_score >= 0.75:
         print(f"Routing: DOCUMENT QA (score={doc_score})")
         return "document_qa"
-    elif doc_score <= 0.3:
+    elif doc_score <= 0.4:
         print(f"Routing: WEB SEARCH (score={doc_score})")
         return "web_search"
     else:

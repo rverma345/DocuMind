@@ -4,6 +4,9 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Chroma
 from langchain_openai import OpenAIEmbeddings
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 def load_documents(path):
@@ -37,4 +40,7 @@ def ingest_documents(folder_path='data/',persist_dir='vector_store/'):
     chunks=split_documents(docs)
     vectorstore=embed_and_store(chunks,persist_dir)
     return vectorstore
-    
+
+
+vector_store=ingest_documents('data\DBMS_Notes.pdf',persist_dir='vector_store/')
+print(vector_store)
