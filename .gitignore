@@ -28,8 +28,8 @@ venv*/
 # Data & Vector Stores
 # -----------------
 vector_store/
-data/*.pdf
-!data/.gitkeep   # keep folder structure but ignore actual PDFs
+uploaded_pdfs/*.pdf
+!uploaded_pdfs/.gitkeep   # keep folder structure but ignore actual PDFs
 
 # -----------------
 # OS / IDE
