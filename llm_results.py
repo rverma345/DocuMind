@@ -7,8 +7,7 @@ load_dotenv()
 parser = StrOutputParser()
 
 llm = ChatOpenAI(
-    model='gpt-5-mini-2025-08-07',
-    temperature=0.3
+    model='gpt-5-mini-2025-08-07'
 )
 
 def generate_result(query, context):
