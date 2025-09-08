@@ -4,4 +4,7 @@ openai
 chromadb
 requests
 pypdf
-python-multipart
+langchain-community
+langchain-openai
+python-dotenv
+tiktoken
